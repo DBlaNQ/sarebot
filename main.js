@@ -1,4 +1,5 @@
 const discord = require('discord.js')
+const ytdl = require('ytdl-core')
 
 client = new discord.Client();
 
@@ -27,17 +28,9 @@ client.on('message', msg =>{
         //FUN COMMANDS
         case 'rate':
             let choek = msg.content.split(" ")
-            msg.channel.send(`I give ${choek[1]} a ${Math.floor(Math.random(10) + 1)}/10`)
+            msg.channel.send(`I give ${choek[1]} a ${Math.floor(Math.random() * 10)}/10`)
             break;
         //MUSIC COMMANDS
-        case 'play':
-            
-        break;
-        case 'stop':
-            if(msg.member.roles.find(r => r.name === "DJ") || msg.member.hasPermission("administrator")){
-                
-            }
-            break;
     }
     //EPIC COMMANDS
     switch(msg.content){
