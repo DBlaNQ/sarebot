@@ -1,6 +1,4 @@
 const discord = require('discord.js')
-const ytdl = require('ytdl-core')
-
 client = new discord.Client();
 
 client.on('ready', () => {
