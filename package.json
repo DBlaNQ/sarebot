@@ -4,7 +4,10 @@
   "description": "A bot about sare",
   "main": "main.js",
   "dependencies": {
-    "discord.js": "^12.4.0"
+    "discord.js": "^12.4.0",
+    "opusscript": "0.0.7",
+    "ytdl-core": "^3.4.2",
+    "ytsearcher": "^1.2.3"
   },
   "devDependencies": {},
   "scripts": {

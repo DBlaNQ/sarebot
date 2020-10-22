@@ -1,15 +1,26 @@
 const discord = require('discord.js')
+const ytdl = require('ytdl-core');
+const { YTSearcher } = require('ytsearcher');
+
 client = new discord.Client();
+searcher = new YTSearcher({
+    key: process.env.YTAPI,
+    revealed: true
+});
 
 client.on('ready', () => {
     console.log("Online sum be Arsenal!")
 })
 
-client.on('message', msg =>{
+const queue = new Map();
+
+client.on('message', async(msg) =>{
     const prefix = '-';
 
     let args = msg.content.slice(prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
+
+    const serverQueue = queue.get(msg.guild.id)
 
     switch (command){
         //Bruh
@@ -29,6 +40,15 @@ client.on('message', msg =>{
             msg.channel.send(`I give ${choek[1]} a ${Math.floor(Math.random() * 10)}/10`)
             break;
         //MUSIC COMMANDS
+        case 'play':
+            execute(msg, serverQueue)
+            break;
+        case 'skip':
+            skip(msg, serverQueue)
+            break;
+        case 'stop':
+            stop(msg, serverQueue);
+            break;
     }
     //EPIC COMMANDS
     switch(msg.content){
@@ -60,6 +80,81 @@ client.on('message', msg =>{
         case 'mizh':
             msg.channel.send(" ", {files: ["img/kiko.png"]})
             break;
+    }
+
+    async function execute(msg, serverQueue){
+        let vc = msg.member.voice.channel;
+            if(vc){
+                let result = await searcher.search(args.join(" "), { type: 'video' });
+                const songInfo = await ytdl.getInfo(result.first.url)
+                
+                const song = {
+                    title: songInfo.videoDetails.title,
+                    url: songInfo.videoDetails.video_url
+                };
+
+                if(!serverQueue){
+                    const queueConstruct = {
+                        txtChannel: msg.channel,
+                        vChannel: vc,
+                        connection: null,
+                        songs: [],
+                        volume: 5,
+                        playing: true
+                    };
+                    queue.set(msg.guild.id, queueConstruct);
+                        
+                    queueConstruct.songs.push(song);
+
+                    try{
+                        let connection = await vc.join();
+                        queueConstruct.connection = connection;
+                        play(msg.guild, queueConstruct.songs[0]);
+                    }catch (err){
+                        console.error(err);
+                        queue.delete(msg.guild.id);
+                        return msg.channel.send(err);
+                    }
+                }else{
+                    serverQueue.songs.push(song);
+                    return msg.channel.send(`${song.url} has been added to the queue`);
+                }
+            }else{
+                return msg.channel.send("You are not in any voice channels to use this command")
+            }
+    }
+
+    function skip (message, serverQueue){
+        if(!message.member.voice.channel)
+            return message.channel.send("You have to be in a voice channel to use this command")
+        if(!serverQueue)
+            return message.channel.send("There is no song to skip");
+        serverQueue.connection.dispatcher.end();    
+    }
+
+    function stop(message, serverQueue) {
+        if(!message.member.voice.channel)
+            return message.channel.send("You have to be in a voice channel to use this command")
+        serverQueue.songs = [];
+        serverQueue.connection.dispatcher.end();
+    }
+
+    function play(guild, song){
+        const serverQueue = queue.get(guild.id);
+        if(!song){
+            serverQueue.vChannel.leave();
+            queue.delete(guild.id);
+            return;
+        }
+        const dispatcher = serverQueue.connection
+            .play(ytdl(song.url))
+            .on("finish", () => {
+                serverQueue.songs.shift();
+                play(guild, serverQueue.songs[0]);
+            })
+            .on("error", error => console.error(error));
+        dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+        serverQueue.txtChannel.send(`Now playing ${song.url}`);
     }
 })
 
