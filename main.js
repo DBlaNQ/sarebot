@@ -7,22 +7,40 @@ client.on('ready', () => {
 })
 
 client.on('message', msg =>{
-    switch (msg.content){
+    const prefix = '-';
+
+    let args = msg.content.slice(prefix.length).trim().split(/ +/g);
+    const command = args.shift().toLowerCase();
+
+    switch (command){
         //Bruh
-        case '-me':
+        case 'me':
             msg.channel.send("Zdravo! Jas sum Sare Andreevski, Imam 10 godini i najubav fudbalerski tim mi e Arsenal!");
             break;
         //ADMIN COMMANDS
-        case '-kick':
+        case 'kick':
             if(msg.member.hasPermission("kick_members") || msg.member.hasPermission("administrator")){
                 msg.mentions[0].kick()
             }
             break;
-        case '-rate':
+
+        //FUN COMMANDS
+        case 'rate':
             let choek = msg.content.split(" ")
             msg.channel.send(`I give ${choek[1]} a ${Math.floor(Math.random(10) + 1)}/10`)
             break;
-        //EPIC COMMANDS
+        //MUSIC COMMANDS
+        case 'play':
+            
+        break;
+        case 'stop':
+            if(msg.member.roles.find(r => r.name === "DJ") || msg.member.hasPermission("administrator")){
+                
+            }
+            break;
+    }
+    //EPIC COMMANDS
+    switch(msg.content){
         case 'pog':
         case "poggers":
             msg.channel.send(" ", {files: ["img/pogger.png"]})
