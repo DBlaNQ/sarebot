@@ -14,76 +14,81 @@ client.on('ready', () => {
 
 const queue = new Map();
 
-client.on('message', async(msg) =>{
+client.on('message', async(message) =>{
     const prefix = '-';
 
-    let args = msg.content.slice(prefix.length).trim().split(/ +/g);
+    let args = message.content.slice(prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
 
-    const serverQueue = queue.get(msg.guild.id)
+    const serverQueue = queue.get(message.guild.id)
 
     switch (command){
         //Bruh
         case 'me':
-            msg.channel.send("Zdravo! Jas sum Sare Andreevski, Imam 10 godini i najubav fudbalerski tim mi e Arsenal!");
+            message.channel.send("Zdravo! Jas sum Sare Andreevski, Imam 10 godini i najubav fudbalerski tim mi e Arsenal!");
             break;
         //ADMIN COMMANDS
+        case 'men':
+            message.channel.send(message.mentions.member)
+            break;
         case 'kick':
-            if(msg.member.hasPermission("kick_members") || msg.member.hasPermission("administrator")){
-                msg.mentions[0].kick()
+            if(message.member.hasPermission("kick_members") || message.member.hasPermission("administrator")){
+                message.mentions[0].kick()
             }
             break;
 
         //FUN COMMANDS
         case 'rate':
-            let choek = msg.content.split(" ")
-            msg.channel.send(`I give ${choek[1]} a ${Math.floor(Math.random() * 10)}/10`)
+            let choek = message.content.split(" ")
+            message.channel.send(`I give ${choek[1]} a ${Math.floor(Math.random() * 10)}/10`)
             break;
         //MUSIC COMMANDS
         case 'play':
-            execute(msg, serverQueue)
+            execute(message, serverQueue)
             break;
         case 'skip':
-            skip(msg, serverQueue)
+            if(!message.membe.roles.some(r => r.name === "DJ") || !message.member.hasPermission("administrator"))
+                return message.channel.send("You do not have the role DJ or Admin Privilages!")
+            skip(message, serverQueue)
             break;
         case 'stop':
-            stop(msg, serverQueue);
+            stop(message, serverQueue);
             break;
     }
     //EPIC COMMANDS
-    switch(msg.content){
+    switch(message.content){
         case 'pog':
         case "poggers":
-            msg.channel.send(" ", {files: ["img/pogger.png"]})
+            message.channel.send(" ", {files: ["img/pogger.png"]})
             break;
         case 'th':
         case "trihard":
-            msg.channel.send(" ", {files: ["https://www.streamscheme.com/wp-content/uploads/2020/04/TriHard.png"]})
+            message.channel.send(" ", {files: ["https://www.streamscheme.com/wp-content/uploads/2020/04/TriHard.png"]})
             break;
         case 'mac':
         case 'macmiller':
-            msg.channel.send(" ", {files: ["img/mac.jpg"]})
+            message.channel.send(" ", {files: ["img/mac.jpg"]})
             break;
         case 'petar':
-            msg.channel.send(" ", {files: ["img/petar.jpg"]})
+            message.channel.send(" ", {files: ["img/petar.jpg"]})
             break;
         case 'ivo':
-            msg.channel.send(" ", {files: ["img/ivo.jpg"]})
+            message.channel.send(" ", {files: ["img/ivo.jpg"]})
             break
         case 'daved':
         case 'dado':
         case 'david':
-            msg.channel.send(" ", {files: ["img/dado.png"]})
+            message.channel.send(" ", {files: ["img/dado.png"]})
             break;
         case 'kiko':
         case 'miz':
         case 'mizh':
-            msg.channel.send(" ", {files: ["img/kiko.png"]})
+            message.channel.send(" ", {files: ["img/kiko.png"]})
             break;
     }
 
-    async function execute(msg, serverQueue){
-        let vc = msg.member.voice.channel;
+    async function execute(message, serverQueue){
+        let vc = message.member.voice.channel;
             if(vc){
                 let result = await searcher.search(args.join(" "), { type: 'video' });
                 const songInfo = await ytdl.getInfo(result.first.url)
@@ -95,32 +100,32 @@ client.on('message', async(msg) =>{
 
                 if(!serverQueue){
                     const queueConstruct = {
-                        txtChannel: msg.channel,
+                        txtChannel: message.channel,
                         vChannel: vc,
                         connection: null,
                         songs: [],
                         volume: 5,
                         playing: true
                     };
-                    queue.set(msg.guild.id, queueConstruct);
+                    queue.set(message.guild.id, queueConstruct);
                         
                     queueConstruct.songs.push(song);
 
                     try{
                         let connection = await vc.join();
                         queueConstruct.connection = connection;
-                        play(msg.guild, queueConstruct.songs[0]);
+                        play(message.guild, queueConstruct.songs[0]);
                     }catch (err){
                         console.error(err);
-                        queue.delete(msg.guild.id);
-                        return msg.channel.send(err);
+                        queue.delete(message.guild.id);
+                        return message.channel.send(err);
                     }
                 }else{
                     serverQueue.songs.push(song);
-                    return msg.channel.send(`${song.url} has been added to the queue`);
+                    return message.channel.send(`${song.url} has been added to the queue`);
                 }
             }else{
-                return msg.channel.send("You are not in any voice channels to use this command")
+                return message.channel.send("You are not in any voice channels to use this command")
             }
     }
 
