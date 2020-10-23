@@ -146,6 +146,7 @@ client.on('message', async(message) =>{
 
     function play(guild, song){
         const serverQueue = queue.get(guild.id);
+        serverQueue.connection.voice.setSelfDeaf(true);
         if(!song){
             serverQueue.vChannel.leave();
             queue.delete(guild.id);
@@ -162,5 +163,4 @@ client.on('message', async(message) =>{
         serverQueue.txtChannel.send(`Now playing ${song.url}`);
     }
 })
-
 client.login(process.env.TOKEN)
