@@ -114,6 +114,7 @@ client.on('message', async(message) =>{
 
                     try{
                         let connection = await vc.join();
+                        connection.voice.setSelfDeaf(true);
                         queueConstruct.connection = connection;
                         play(message.guild, queueConstruct.songs[0]);
                     }catch (err){
@@ -147,7 +148,6 @@ client.on('message', async(message) =>{
 
     function play(guild, song){
         const serverQueue = queue.get(guild.id);
-        serverQueue.connection.voice.setSelfDeaf(true);
         if(!song){
             serverQueue.vChannel.leave();
             queue.delete(guild.id);
