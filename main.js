@@ -48,7 +48,7 @@ client.on('message', async(message) =>{
             execute(message, serverQueue)
             break;
         case 'skip':
-            if(!message.member.guild.roles.get('DJ') || !message.member.hasPermission("administrator"))
+            if(!message.member.hasPermission("administrator"))
                 return message.channel.send("You do not have the role DJ or Admin Privilages!")
             skip(message, serverQueue)
             break;
@@ -114,7 +114,6 @@ client.on('message', async(message) =>{
 
                     try{
                         let connection = await vc.join();
-                        connection.voice.setSelfDeaf(true);
                         queueConstruct.connection = connection;
                         play(message.guild, queueConstruct.songs[0]);
                     }catch (err){
