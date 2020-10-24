@@ -48,7 +48,7 @@ client.on('message', async(message) =>{
             execute(message, serverQueue)
             break;
         case 'skip':
-            if(!message.member.roles.some(r => r.name === "DJ") || !message.member.hasPermission("administrator"))
+            if(!message.member.guild.roles.get('DJ') || !message.member.hasPermission("administrator"))
                 return message.channel.send("You do not have the role DJ or Admin Privilages!")
             skip(message, serverQueue)
             break;
