@@ -44,10 +44,11 @@ client.on('message', async(message) =>{
             break;
         //MUSIC COMMANDS
         case 'play':
+            if(args.length === 0) return message.channel.send("Dobro be glupav si da neznajs da napishish -play <video nekoe tuka>? Weirdchamp")
             execute(message, serverQueue)
             break;
         case 'skip':
-            if(!message.membe.roles.some(r => r.name === "DJ") || !message.member.hasPermission("administrator"))
+            if(!message.member.roles.some(r => r.name === "DJ") || !message.member.hasPermission("administrator"))
                 return message.channel.send("You do not have the role DJ or Admin Privilages!")
             skip(message, serverQueue)
             break;
