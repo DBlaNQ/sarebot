@@ -182,5 +182,4 @@ client.on('message', async(message) =>{
         channel.send(assPic.media);
     }
 })
-//client.login(process.env.TOKEN)
-client.login("MzY2NjQ5MzgyNTIwNDg3OTQ2.Wdpq2A.kWPyj7BNCShEHG9a3INWEIftf30")
+client.login(process.env.TOKEN)
