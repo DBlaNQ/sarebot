@@ -1,5 +1,6 @@
 const discord = require('discord.js')
 const ytdl = require('ytdl-core');
+const trev = require('trev');
 const { YTSearcher } = require('ytsearcher');
 
 client = new discord.Client();
@@ -33,12 +34,12 @@ client.on('message', async(message) =>{
         case 'help':
             const helpMsg = new discord.MessageEmbed()
                 .setTitle("Help commands | Prefix is ('-')")
-                .setAuthor("Kiko#4288")
-                .setColor("DARK_BLUE")
+                .setFooter("Kiko#4288")
+                .setColor([69, 196, 255])
                 .addField("Bruh Commands", "me, help")
                 .addField("Fun Commands", "rate")
                 .addField("Music Commands", "play, skip, leave")
-  
+            message.channel.send(helpMsg);
             break;
         //FUN COMMANDS
         case 'rate':
@@ -55,6 +56,12 @@ client.on('message', async(message) =>{
             break;
         case 'leave':
             stop(message, serverQueue);
+            break;
+
+        //NSFW
+        case 'ass':
+            if(!message.channel.nsfw) return message.channel.send("This channel is not NSFW.")
+            assp(message.channel);
             break;
     }
     //EPIC COMMANDS
@@ -118,7 +125,7 @@ client.on('message', async(message) =>{
                         queueConstruct.connection = connection;
                         play(message.guild, queueConstruct.songs[0]);
                     }catch (err){
-                        console.error(err);
+                        console.error(`Epic error occured ${err}`);
                         queue.delete(message.guild.id);
                         return message.channel.send(err);
                     }
@@ -131,6 +138,7 @@ client.on('message', async(message) =>{
             }
     }
 
+    //MUSIC FUNCTIONS
     function skip (message, serverQueue){
         if(!message.member.voice.channel)
             return message.channel.send("You have to be in a voice channel to use this command")
@@ -153,15 +161,26 @@ client.on('message', async(message) =>{
             queue.delete(guild.id);
             return;
         }
-        const dispatcher = serverQueue.connection
-            .play(ytdl(song.url))
-            .on("finish", () => {
-                serverQueue.songs.shift();
-                play(guild, serverQueue.songs[0]);
-            })
-            .on("error", error => console.error(error));
-        dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-        serverQueue.txtChannel.send(`Now playing ${song.url}`);
+        try{
+            const dispatcher = serverQueue.connection
+                .play(ytdl(song.url))
+                .on("finish", () => {
+                    serverQueue.songs.shift();
+                    play(guild, serverQueue.songs[0]);
+                })
+                .on("error", error => console.error(error));
+            dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+            serverQueue.txtChannel.send(`Now playing ${song.url}`);
+        }catch(err){
+            console.log(`There was an error ${err}`)
+        }
+    }
+
+    //NSFW FUNCTIONS
+    async function assp(channel){
+        let assPic = await trev.nsfw.ass();
+        channel.send(assPic.media);
     }
 })
-client.login(process.env.TOKEN)
+//client.login(process.env.TOKEN)
+client.login("MzY2NjQ5MzgyNTIwNDg3OTQ2.Wdpq2A.kWPyj7BNCShEHG9a3INWEIftf30")
