@@ -13,10 +13,10 @@ client.on('ready', () => {
 })
 
 const queue = new Map();
+const prefix = '-';
 
 client.on('message', async(message) =>{
-    const prefix = '-';
-
+    if (!message.content.startsWith(prefix) || message.author.bot)
     let args = message.content.slice(prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
 
@@ -27,16 +27,16 @@ client.on('message', async(message) =>{
         case 'me':
             message.channel.send("Zdravo! Jas sum Sare Andreevski, Imam 10 godini i najubav fudbalerski tim mi e Arsenal!");
             break;
-        //ADMIN COMMANDS
-        case 'men':
-            message.channel.send(message.mentions.member)
+        case 'help':
+            const helpMsg = new discord.MessageEmbed()
+                .setTitle("Help commands | Prefix is ('-')")
+                .setAuthor("Kiko#4288")
+                .setColor("DARK_BLUE")
+                .addField("Bruh Commands", "me, help")
+                .addField("Fun Commands", "rate")
+                .addField("Music Commands", "play, skip, leave")
+  
             break;
-        case 'kick':
-            if(message.member.hasPermission("kick_members") || message.member.hasPermission("administrator")){
-                message.mentions[0].kick()
-            }
-            break;
-
         //FUN COMMANDS
         case 'rate':
             let choek = message.content.split(" ")
@@ -50,7 +50,7 @@ client.on('message', async(message) =>{
         case 'skip':
             skip(message, serverQueue)
             break;
-        case 'stop':
+        case 'leave':
             stop(message, serverQueue);
             break;
     }
