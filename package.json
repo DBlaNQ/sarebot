@@ -7,7 +7,7 @@
     "discord.js": "^12.4.0",
     "opusscript": "0.0.7",
     "trev": "^2.0.8",
-    "ytdl-core-discord": "^1.2.4",
+    "ytdl-core": "^4.0.0",
     "ytsearcher": "^1.2.3"
   },
   "devDependencies": {},
