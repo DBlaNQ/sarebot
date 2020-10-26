@@ -1,5 +1,5 @@
 const discord = require('discord.js')
-const ytdl = require('ytdl-core');
+const ytdl = require('ytdl-core-discord');
 const trev = require('trev');
 const { YTSearcher } = require('ytsearcher');
 
@@ -163,7 +163,7 @@ client.on('message', async(message) =>{
         }
         try{
             const dispatcher = serverQueue.connection
-                .play(ytdl(song.url))
+                .playOpusStream(await ytdl(song.url))
                 .on("finish", () => {
                     serverQueue.songs.shift();
                     play(guild, serverQueue.songs[0]);
