@@ -100,8 +100,12 @@ client.on('message', async(message) =>{
         let vc = message.member.voice.channel;
             if(vc){
                 let result = await searcher.search(args.join(" "), { type: 'video' });
-                const songInfo = await ytdl.getInfo(result.first.url)
-                
+                const songInfo = null;
+                try{
+                    songInfo = await ytdl.getInfo(result.first.url)
+                }catch(err){
+                    console.log(`Lmao ${err}`)
+                }
                 const song = {
                     title: songInfo.videoDetails.title,
                     url: songInfo.videoDetails.video_url
