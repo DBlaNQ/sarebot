@@ -1,19 +1,19 @@
 {
-  "name": "sarebot",
-  "version": "2.0.0",
-  "description": "A bot about sare",
-  "main": "main.js",
-  "dependencies": {
-    "discord.js": "^12.4.0",
-    "opusscript": "0.0.7",
-    "trev": "^2.0.8",
-    "ytdl-core": "^3.4.2",
-    "ytsearcher": "^1.2.3"
-  },
-  "devDependencies": {},
+  "name": "discordbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Hristijan",
-  "license": "ISC"
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.4.0",
+    "lyrics-finder": "^21.4.0",
+    "opusscript": "0.0.7",
+    "ytdl-core": "^4.1.6",
+    "ytpl": "^2.0.0-alpha.3",
+    "ytsearcher": "^1.2.3"
+  }
 }
