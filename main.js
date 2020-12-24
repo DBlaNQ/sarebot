@@ -34,11 +34,11 @@ fs.readdir("./commands/", (e, f) => {
     })
 })
 const queue = new Map();
-const prefix = '-';
+const prefix = '!';
 
 client.on('message', async(message) =>{
 
-    switch(message.content){
+    switch(message.content.toLowerCase()){
         case 'pog':
         case "poggers":
             message.channel.send(" ", {files: ["img/pogger.png"]})
