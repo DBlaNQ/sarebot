@@ -11,7 +11,7 @@ module.exports.run = async (client, message, args, queue, searcher) => {
     
     const embeds = embedGenerator(serverQueue)
 
-    const queueEmbed = await message.channel.send(`Lyrics page: ${currentPage+1}/${embeds.length}`, embeds[currentPage])
+    const queueEmbed = await message.channel.send(`Queue page: ${currentPage+1}/${embeds.length}`, embeds[currentPage])
     await queueEmbed.react('⬅️');
     await queueEmbed.react('➡️');
 
@@ -22,13 +22,13 @@ module.exports.run = async (client, message, args, queue, searcher) => {
         if(reaction.emoji.name === '➡️'){
             if(currentPage < embeds.length-1){
                 currentPage+=1;
-                queueEmbed.edit(`Lyrics page: ${currentPage+1}/${embeds.length}`, embeds[currentPage]);
+                queueEmbed.edit(`Queue page: ${currentPage+1}/${embeds.length}`, embeds[currentPage]);
                 message.reactions.resolve(reaction).users.remove(user)
             }
         }else if(reaction.emoji.name === '⬅️'){
             if (currentPage !== 0){
                 currentPage -= 1;
-                queueEmbed.edit(`Lyrics page: ${currentPage+1}/${embeds.length}`, embeds[currentPage])
+                queueEmbed.edit(`Queue page: ${currentPage+1}/${embeds.length}`, embeds[currentPage])
                 message.reactions.resolve(reaction).users.remove(user)
             }
         }
