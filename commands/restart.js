@@ -4,3 +4,8 @@ module.exports.run = async (client, message, args, queue, searcher) => {
         process.exit();
     }
 }
+
+module.exports.config = {
+    name: "restart",
+    aliases: ["rs"]
+}
