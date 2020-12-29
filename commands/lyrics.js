@@ -16,6 +16,7 @@ module.exports.run = async(client, message, args, queue, searcher) => {
 
     message.channel.send("Please enter the song name now");
     await message.channel.awaitMessages(messageFilter, { max: 1, time: 15000 }).then(async collected => {
+        if(!collected.first()) return
         songName = collected.first().content;
         await finder (artist, songName, message, pages)
     })
